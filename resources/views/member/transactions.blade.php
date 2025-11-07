@@ -83,7 +83,7 @@
                             </h2>
                             <div class="d-flex align-items-center">
                                 <span class="badge bg-warning bg-opacity-10 text-warning me-2">
-                                    <i class="bi bi-percent me-1"></i>5% rate
+                                    <i class="bi bi-percent me-1"></i>1.5% rate
                                 </span>
                                 <small class="text-muted">Bonus earned</small>
                             </div>

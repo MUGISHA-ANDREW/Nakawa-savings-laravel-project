@@ -23,7 +23,7 @@
 <div class="container-fluid">
     <!-- Enhanced Statistics Cards -->
     <div class="row mb-4">
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
             <div class="card card-hover border-0 shadow-lg h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
@@ -34,7 +34,7 @@
                                 <span class="badge bg-success bg-opacity-10 text-success me-2">
                                     <i class="bi bi-wallet2 me-1"></i>Available
                                 </span>
-                                <small class="text-muted">Current balance</small>
+                                <small class="text-muted">Includes deposits + interest</small>
                             </div>
                         </div>
                         <div class="icon-wrapper bg-success bg-opacity-10 rounded-circle p-3">
@@ -44,13 +44,13 @@
                 </div>
                 <div class="card-footer bg-transparent border-0 pt-0">
                     <small class="text-muted">
-                        <i class="bi bi-info-circle me-1"></i>Your total savings balance
+                        <i class="bi bi-info-circle me-1"></i>Your total savings balance with 1.5% interest
                     </small>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
             <div class="card card-hover border-0 shadow-lg h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
@@ -61,7 +61,7 @@
                                 <span class="badge bg-primary bg-opacity-10 text-primary me-2">
                                     <i class="bi bi-arrow-up me-1"></i>{{ $stats['total_deposits_count'] ?? 0 }} deposits
                                 </span>
-                                <small class="text-muted">All-time total</small>
+                                <small class="text-muted">Principal amount only</small>
                             </div>
                         </div>
                         <div class="icon-wrapper bg-primary bg-opacity-10 rounded-circle p-3">
@@ -71,34 +71,7 @@
                 </div>
                 <div class="card-footer bg-transparent border-0 pt-0">
                     <small class="text-muted">
-                        <i class="bi bi-graph-up me-1"></i>Includes 5% interest on deposits
-                    </small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-4 col-md-6 mb-4">
-            <div class="card card-hover border-0 shadow-lg h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div class="flex-grow-1">
-                            <h6 class="card-title text-uppercase text-muted fw-bold mb-2">Interest Earned</h6>
-                            <h2 class="fw-bold text-warning mb-1">UGX {{ number_format($stats['total_interest'] ?? 0, 2) }}</h2>
-                            <div class="d-flex align-items-center">
-                                <span class="badge bg-warning bg-opacity-10 text-warning me-2">
-                                    <i class="bi bi-percent me-1"></i>5% rate
-                                </span>
-                                <small class="text-muted">Total interest</small>
-                            </div>
-                        </div>
-                        <div class="icon-wrapper bg-warning bg-opacity-10 rounded-circle p-3">
-                            <i class="bi bi-graph-up-arrow text-warning fs-4"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent border-0 pt-0">
-                    <small class="text-muted">
-                        <i class="bi bi-award me-1"></i>Bonus on every deposit
+                        <i class="bi bi-cash-stack me-1"></i>Total principal deposited (excluding interest)
                     </small>
                 </div>
             </div>
@@ -115,7 +88,7 @@
                         <h5 class="mb-0 fw-bold">
                             <i class="bi bi-plus-circle me-2"></i>Make a Deposit
                         </h5>
-                        <span class="badge bg-beige text-dark-green">5% Interest</span>
+                        <span class="badge bg-beige text-dark-green">+1.5% Interest</span>
                     </div>
                 </div>
                 <div class="card-body p-4">
@@ -138,22 +111,22 @@
                                     <div class="form-text">Minimum deposit: UGX 1,000</div>
                                 </div>
 
-                                <!-- Interest Calculation Preview -->
-                                <div class="interest-preview mb-4 p-3 rounded bg-light" id="interestPreview" style="display: none;">
+                                <!-- Deposit Preview -->
+                                <div class="deposit-preview mb-4 p-3 rounded bg-light" id="depositPreview" style="display: none;">
                                     <h6 class="fw-semibold mb-2">Deposit Preview</h6>
                                     <div class="row text-center">
-                                        <div class="col-4">
-                                            <small class="text-muted d-block">Principal</small>
-                                            <span class="fw-bold" id="previewPrincipal">UGX 0</span>
+                                        <div class="col-6">
+                                            <small class="text-muted d-block">Principal Amount</small>
+                                            <span class="fw-bold text-primary" id="previewPrincipal">UGX 0</span>
                                         </div>
-                                        <div class="col-4">
-                                            <small class="text-muted d-block">Interest (5%)</small>
+                                        <div class="col-6">
+                                            <small class="text-muted d-block">+1.5% Interest</small>
                                             <span class="fw-bold text-success" id="previewInterest">UGX 0</span>
                                         </div>
-                                        <div class="col-4">
-                                            <small class="text-muted d-block">Total</small>
-                                            <span class="fw-bold text-primary" id="previewTotal">UGX 0</span>
-                                        </div>
+                                    </div>
+                                    <div class="text-center mt-2 pt-2 border-top">
+                                        <small class="text-muted d-block">Total added to balance</small>
+                                        <span class="fw-bold text-dark" id="previewTotal">UGX 0</span>
                                     </div>
                                 </div>
 
@@ -176,11 +149,11 @@
                                 </div>
                                 <div class="benefit-item d-flex align-items-center mb-3">
                                     <div class="benefit-icon bg-primary bg-opacity-10 text-primary rounded-circle me-3">
-                                        <i class="bi bi-graph-up"></i>
+                                        <i class="bi bi-percent"></i>
                                     </div>
                                     <div>
-                                        <span class="fw-semibold">Guaranteed Interest</span>
-                                        <small class="text-muted d-block">5% on every deposit</small>
+                                        <span class="fw-semibold">1.5% Interest</span>
+                                        <small class="text-muted d-block">Bonus on every deposit</small>
                                     </div>
                                 </div>
                                 <div class="benefit-item d-flex align-items-center mb-3">
@@ -198,7 +171,7 @@
                                     </div>
                                     <div>
                                         <span class="fw-semibold">Transparent Tracking</span>
-                                        <small class="text-muted d-block">Monitor your growth</small>
+                                        <small class="text-muted d-block">Monitor your progress</small>
                                     </div>
                                 </div>
                             </div>
@@ -322,8 +295,8 @@
                                 <div class="flex-grow-1">
                                     <div class="fw-semibold">
                                         {{ ucfirst($transaction->type) }}
-                                        @if($transaction->type == 'deposit' && $transaction->interest_rate > 0)
-                                            <small class="text-success">(+{{ $transaction->interest_rate }}%)</small>
+                                        @if($transaction->type == 'deposit')
+                                            <small class="text-success">(+1.5%)</small>
                                         @endif
                                     </div>
                                     <small class="text-muted">{{ $transaction->created_at->diffForHumans() }}</small>
@@ -359,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Quick amount buttons
     const quickAmountButtons = document.querySelectorAll('.quick-amount');
     const depositAmountInput = document.getElementById('deposit_amount');
-    const interestPreview = document.getElementById('interestPreview');
+    const depositPreview = document.getElementById('depositPreview');
     
     quickAmountButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -373,11 +346,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Interest calculation preview
+    // Deposit preview with interest calculation (for display only)
     if (depositAmountInput) {
         depositAmountInput.addEventListener('input', function() {
             const amount = parseFloat(this.value) || 0;
-            const interestRate = 5; // 5%
+            const interestRate = 1.5; // 1.5% interest
             const interestAmount = (amount * interestRate) / 100;
             const totalAmount = amount + interestAmount;
 
@@ -385,9 +358,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('previewPrincipal').textContent = 'UGX ' + amount.toLocaleString();
                 document.getElementById('previewInterest').textContent = 'UGX ' + interestAmount.toLocaleString();
                 document.getElementById('previewTotal').textContent = 'UGX ' + totalAmount.toLocaleString();
-                interestPreview.style.display = 'block';
+                depositPreview.style.display = 'block';
             } else {
-                interestPreview.style.display = 'none';
+                depositPreview.style.display = 'none';
             }
         });
     }
@@ -454,116 +427,5 @@ function showNotification(message, type = 'info') {
 }
 </script>
 
-<style>
-.card-hover {
-    transition: all 0.3s ease;
-    border: 1px solid rgba(0,0,0,0.05);
-}
 
-.card-hover:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
-}
-
-.icon-wrapper {
-    transition: all 0.3s ease;
-}
-
-.benefit-icon, .activity-icon {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.quick-amount {
-    transition: all 0.3s ease;
-}
-
-.quick-amount:hover {
-    transform: translateY(-2px);
-}
-
-.quick-amount.active {
-    background-color: #1a472a;
-    border-color: #1a472a;
-    color: white;
-}
-
-.interest-preview {
-    border-left: 4px solid #1a472a;
-}
-
-.progress {
-    border-radius: 10px;
-}
-
-.progress-bar {
-    border-radius: 10px;
-    transition: width 0.6s ease;
-}
-
-.activity-item {
-    transition: background-color 0.3s ease;
-}
-
-.activity-item:hover {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-}
-
-.spin {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.bg-dark-green {
-    background-color: #1a472a !important;
-}
-
-.text-beige {
-    color: #f5f5dc !important;
-}
-
-.bg-beige {
-    background-color: #f5f5dc !important;
-}
-
-.btn-dark-green {
-    background-color: #1a472a;
-    border-color: #1a472a;
-    color: white;
-}
-
-.btn-dark-green:hover {
-    background-color: #2d5a3d;
-    border-color: #2d5a3d;
-    color: white;
-}
-
-.btn-outline-dark-green {
-    color: #1a472a;
-    border-color: #1a472a;
-}
-
-.btn-outline-dark-green:hover {
-    background-color: #1a472a;
-    color: white;
-}
-
-@media (max-width: 768px) {
-    .card-body.p-4 {
-        padding: 1.5rem !important;
-    }
-    
-    .input-group-lg {
-        font-size: 0.9rem;
-    }
-}
-</style>
 @endsection
