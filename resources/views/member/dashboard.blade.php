@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Initialize animations
+    
     animateCards();
 });
 
