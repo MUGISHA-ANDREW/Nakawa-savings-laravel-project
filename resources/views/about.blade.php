@@ -588,7 +588,7 @@
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <p class="mb-0" style="color: rgba(255,255,255,0.7);">
-                        &copy; 2024 Nakawa Market Savings Group. All rights reserved.
+                        &copy; 2025 Nakawa Market Savings Group. All rights reserved.
                     </p>
                 </div>
                 <div class="col-md-6 text-md-end">
