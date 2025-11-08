@@ -21,7 +21,7 @@ class MemberController extends Controller
         $user = Auth::user();
         $interestRate = 1.5; // 1.5% interest per deposit
         $interestAmount = ($request->amount * $interestRate) / 100;
-        $finalAmount = $request->amount + $interestAmount;
+        $finalAmount = $request->amount;
 
         // Create deposit transaction
         $transaction = Transaction::create([
@@ -54,15 +54,15 @@ class MemberController extends Controller
         $user = Auth::user();
 
         // Create withdrawal request 
-        Transaction::create([
-            'user_id' => $user->id,
-            'type' => 'withdrawal',
-            'amount' => $request->amount,
-            'interest_rate' => 0, 
-            'final_amount' => $request->amount,
-            'status' => 'pending',
-            'notes' => 'Withdrawal request pending admin approval',
-        ]);
+        // Transaction::create([
+        //     'user_id' => $user->id,
+        //     'type' => 'withdrawal',
+        //     'amount' => $request->amount,
+        //     'interest_rate' => 0, 
+        //     'final_amount' => $request->amount,
+        //     'status' => 'pending',
+        //     'notes' => 'Withdrawal request pending admin approval',
+        // ]);
 
         return redirect()->route('dashboard')->with('success', 'Withdrawal request submitted. Waiting for admin approval.');
     }
