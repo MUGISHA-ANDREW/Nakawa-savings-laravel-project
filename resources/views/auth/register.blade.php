@@ -65,7 +65,27 @@
                         </div>
 
                         <!-- Role Selection -->
-                        
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="role" class="form-label">{{ __('Account Type') }} <span class="text-danger">*</span></label>
+                                <select id="role" class="form-control @error('role') is-invalid @enderror" 
+                                        name="role" required>
+                                    <option value="">Select Account Type</option>
+                                    <option value="member" {{ old('role') == 'member' ? 'selected' : '' }}>Member (Regular Savings Account)</option>
+                                    {{-- <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrator (Group Management)</option>
+                                    <option value="treasurer" {{ old('role') == 'treasurer' ? 'selected' : '' }}>Treasurer (Financial Management)</option> --}}
+                                </select>
+                                @error('role')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                                
+                                <div id="admin-warning" class="alert alert-warning mt-2 d-none">
+                                    <small><i class="bi bi-exclamation-triangle"></i> Administrator accounts require additional verification and approval from existing administrators.</small>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Next of Kin Information -->
                         <div class="border-top pt-3 mb-3">
@@ -164,7 +184,7 @@
                 <div class="card-body">
                     <h6 class="text-dark-green">About Nakawa Market Savings Group</h6>
                     <p class="mb-2"><small><i class="bi bi-check-circle text-success me-2"></i>Secure savings with interest on deposits</small></p>
-                    {{-- <p class="mb-2"><small><i class="bi bi-check-circle text-success me-2"></i>Easy withdrawal requests</small></p> --}}
+                    <p class="mb-2"><small><i class="bi bi-check-circle text-success me-2"></i>Role-based access control for security</small></p>
                     <p class="mb-2"><small><i class="bi bi-check-circle text-success me-2"></i>Transparent account management</small></p>
                     <p class="mb-0"><small><i class="bi bi-check-circle text-success me-2"></i>Community-focused financial growth</small></p>
                 </div>
