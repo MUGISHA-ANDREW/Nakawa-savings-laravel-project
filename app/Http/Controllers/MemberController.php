@@ -10,7 +10,7 @@ class MemberController extends Controller
 {
     public function deposit(Request $request)
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
         if (!$user || !$user->isMember()) {
             return redirect('/login');
@@ -20,9 +20,9 @@ class MemberController extends Controller
             'amount' => 'required|numeric|min:1000', // Minimum deposit 1000 UGX
         ]);
 
-        $interestRate = 2; // 2% interest per deposit
-        $interestAmount = ($request->amount * $interestRate) / 100;
-        $finalAmount = $request->amount;
+        $interestRate = 0.02; // 2% interest per deposit
+        $interestAmount = $request->amount * $interestRate;
+        $finalAmount = $request->amount + $interestAmount;
 
         // Create deposit transaction
         $transaction = Transaction::create([
@@ -32,7 +32,7 @@ class MemberController extends Controller
             'interest_rate' => $interestRate,
             'final_amount' => $finalAmount,
             'status' => 'completed', // Deposits are auto-approved
-            'notes' => 'Deposit with ' . $interestRate . '% interest',
+            'notes' => 'Deposit with ' . ($interestRate * 100) . '% interest',
         ]);
 
         // Update user balance WITH interest
@@ -44,7 +44,7 @@ class MemberController extends Controller
 
     public function withdraw(Request $request)
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
         if (!$user || !$user->isMember()) {
             return redirect('/login');
@@ -54,16 +54,16 @@ class MemberController extends Controller
             'amount' => 'required|numeric|min:1000',
         ]);
 
-        // Create withdrawal request 
-        // Transaction::create([
-        //     'user_id' => $user->id,
-        //     'type' => 'withdrawal',
-        //     'amount' => $request->amount,
-        //     'interest_rate' => 0, 
-        //     'final_amount' => $request->amount,
-        //     'status' => 'pending',
-        //     'notes' => 'Withdrawal request pending admin approval',
-        // ]);
+        // Create withdrawal request
+        Transaction::create([
+            'user_id' => $user->id,
+            'type' => 'withdrawal',
+            'amount' => $request->amount,
+            'interest_rate' => 0,
+            'final_amount' => $request->amount,
+            'status' => 'pending',
+            'notes' => 'Withdrawal request pending admin approval',
+        ]);
 
         return redirect()->route('dashboard')->with('success', 'Withdrawal request submitted. Waiting for admin approval.');
     }
@@ -76,7 +76,7 @@ class MemberController extends Controller
 
     public function transactions()
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
         if (!$user || !$user->isMember()) {
             return redirect('/login');
