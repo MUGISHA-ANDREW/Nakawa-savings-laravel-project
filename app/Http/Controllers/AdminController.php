@@ -7,11 +7,14 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/** @var \App\Models\User $user */
 class AdminController extends Controller
 {
    public function members()
 {
-    if (!Auth::check() || !Auth::user()->isAdmin()) {
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
+    if (!$user || !$user->isAdmin()) {
         return redirect('/dashboard')->with('error', 'Access denied.');
     }
 
@@ -38,7 +41,9 @@ class AdminController extends Controller
 
     public function editMember($id)
     {
-        if (!Auth::check() || !Auth::user()->isAdmin()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user || !$user->isAdmin()) {
             return redirect('/dashboard')->with('error', 'Access denied.');
         }
 
@@ -48,7 +53,9 @@ class AdminController extends Controller
 
     public function updateMember(Request $request, $id)
     {
-        if (!Auth::check() || !Auth::user()->isAdmin()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user || !$user->isAdmin()) {
             return redirect('/dashboard')->with('error', 'Access denied.');
         }
 
@@ -71,7 +78,9 @@ class AdminController extends Controller
 
     public function withdrawalRequests()
 {
-    if (!Auth::check() || !Auth::user()->isAdmin()) {
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
+    if (!$user || !$user->isAdmin()) {
         return redirect('/dashboard')->with('error', 'Access denied.');
     }
 
@@ -128,7 +137,9 @@ class AdminController extends Controller
 
     public function approveWithdrawal($id)
     {
-        if (!Auth::check() || !Auth::user()->isAdmin()) {
+        /** @var \App\Models\User $authUser */
+        $authUser = Auth::user();
+        if (!$authUser || !$authUser->isAdmin()) {
             return redirect('/dashboard')->with('error', 'Access denied.');
         }
 
@@ -152,7 +163,9 @@ class AdminController extends Controller
 
     public function rejectWithdrawal($id)
     {
-        if (!Auth::check() || !Auth::user()->isAdmin()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user || !$user->isAdmin()) {
             return redirect('/dashboard')->with('error', 'Access denied.');
         }
 
@@ -166,7 +179,9 @@ class AdminController extends Controller
 
     public function allTransactions()
     {
-        if (!Auth::check() || !Auth::user()->isAdmin()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user || !$user->isAdmin()) {
             return redirect('/dashboard')->with('error', 'Access denied.');
         }
 
@@ -176,7 +191,9 @@ class AdminController extends Controller
 
     public function reports()
     {
-        if (!Auth::check() || !Auth::user()->isAdmin()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user || !$user->isAdmin()) {
             return redirect('/dashboard')->with('error', 'Access denied.');
         }
 
@@ -192,7 +209,9 @@ class AdminController extends Controller
 
     public function destroyMember($id)
 {
-    if (!Auth::check() || !Auth::user()->isAdmin()) {
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
+    if (!$user || !$user->isAdmin()) {
         return redirect('/dashboard')->with('error', 'Access denied.');
     }
 

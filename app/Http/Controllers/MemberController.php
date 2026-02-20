@@ -10,7 +10,9 @@ class MemberController extends Controller
 {
     public function deposit(Request $request)
     {
-        if (!Auth::check() || !Auth::user()->isMember()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user || !$user->isMember()) {
             return redirect('/login');
         }
 
@@ -18,8 +20,7 @@ class MemberController extends Controller
             'amount' => 'required|numeric|min:1000', // Minimum deposit 1000 UGX
         ]);
 
-        $user = Auth::user();
-        $interestRate = 1.5; // 1.5% interest per deposit
+        $interestRate = 2; // 2% interest per deposit
         $interestAmount = ($request->amount * $interestRate) / 100;
         $finalAmount = $request->amount;
 
@@ -43,15 +44,15 @@ class MemberController extends Controller
 
     public function withdraw(Request $request)
     {
-        if (!Auth::check() || !Auth::user()->isMember()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user || !$user->isMember()) {
             return redirect('/login');
         }
 
         $request->validate([
             'amount' => 'required|numeric|min:1000',
         ]);
-
-        $user = Auth::user();
 
         // Create withdrawal request 
         // Transaction::create([
@@ -75,11 +76,12 @@ class MemberController extends Controller
 
     public function transactions()
     {
-        if (!Auth::check() || !Auth::user()->isMember()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user || !$user->isMember()) {
             return redirect('/login');
         }
 
-        $user = Auth::user();
         $transactions = $user->transactions()->latest()->paginate(10);
         
         return view('member.transactions', compact('user', 'transactions'));
