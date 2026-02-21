@@ -129,8 +129,9 @@
                                 <label for="role" class="form-label">Role *</label>
                                 <select class="form-control @error('role') is-invalid @enderror" 
                                         id="role" name="role" required>
-                                    <option value="member" {{ old('role', 'member') == 'member' ? 'selected' : '' }}>Member</option>
-                                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                                    <option value="member" {{ old('role', 'member') == 'member' ? 'selected' : '' }}>Member(Group Member)</option>
+                                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin(Administrator)</option>
+                                    <option value="treasurer" {{ old('role') == 'treasurer' ? 'selected' : '' }}>Treasurer(Financial Management)</option>
                                 </select>
                                 @error('role')
                                     <div class="invalid-feedback">{{ $message }}</div>

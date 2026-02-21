@@ -64,28 +64,8 @@
                             </div>
                         </div>
 
-                        <!-- Role Selection -->
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label for="role" class="form-label">{{ __('Account Type') }} <span class="text-danger">*</span></label>
-                                <select id="role" class="form-control @error('role') is-invalid @enderror" 
-                                        name="role" required>
-                                    <option value="">Select Account Type</option>
-                                    <option value="member" {{ old('role') == 'member' ? 'selected' : '' }}>Member (Regular Savings Account)</option>
-                                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrator (Group Management)</option>
-                                    <option value="treasurer" {{ old('role') == 'treasurer' ? 'selected' : '' }}>Treasurer (Financial Management)</option>
-                                </select>
-                                @error('role')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                                
-                                <div id="admin-warning" class="alert alert-warning mt-2 d-none">
-                                    <small><i class="bi bi-exclamation-triangle"></i> Administrator accounts require additional verification and approval from existing administrators.</small>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Role (default to member) -->
+                        <input type="hidden" name="role" value="member">
 
                         <!-- Next of Kin Information -->
                         <div class="border-top pt-3 mb-3">
@@ -193,23 +173,5 @@
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const roleSelect = document.getElementById('role');
-    const adminWarning = document.getElementById('admin-warning');
 
-    roleSelect.addEventListener('change', function() {
-        if (this.value === 'admin') {
-            adminWarning.classList.remove('d-none');
-        } else {
-            adminWarning.classList.add('d-none');
-        }
-    });
-
-    // Trigger change event on page load in case of validation errors
-    if (roleSelect.value === 'admin') {
-        adminWarning.classList.remove('d-none');
-    }
-});
-</script>
 @endsection
