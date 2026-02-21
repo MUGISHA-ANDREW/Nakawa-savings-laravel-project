@@ -29,7 +29,7 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div class="flex-grow-1">
                             <h6 class="card-title text-uppercase text-muted fw-bold mb-2">Account Balance</h6>
-                            <h2 class="fw-bold text-success mb-1">UGX {{ number_format($user->account_balance, 2) }}</h2>
+                            <h2 class="fw-bold text-success mb-1">UGX {{ number_format($user->account_balance, 0) }}</h2>
                             <div class="d-flex align-items-center">
                                 <span class="badge bg-success bg-opacity-10 text-success me-2">
                                     <i class="bi bi-wallet2 me-1"></i>Available
@@ -51,7 +51,7 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div class="flex-grow-1">
                             <h6 class="card-title text-uppercase text-muted fw-bold mb-2">Total Deposits</h6>
-                            <h2 class="fw-bold text-primary mb-1">UGX {{ number_format($user->deposits()->where('status', 'completed')->sum('final_amount') ?? 0, 2) }}</h2>
+                            <h2 class="fw-bold text-primary mb-1">UGX {{ number_format($user->deposits()->where('status', 'completed')->sum('amount') ?? 0, 0) }}</h2>
                             <div class="d-flex align-items-center">
                                 <span class="badge bg-primary bg-opacity-10 text-primary me-2">
                                     <i class="bi bi-arrow-down me-1"></i>{{ $user->deposits()->where('status', 'completed')->count() }} deposits
@@ -79,11 +79,11 @@
                                     $totalWithInterest = $user->deposits()->where('status', 'completed')->sum('final_amount');
                                     $totalInterest = $totalWithInterest - $totalDeposits;
                                 @endphp
-                                UGX {{ number_format($totalInterest, 2) }}
+                                UGX {{ number_format($totalInterest, 0) }}
                             </h2>
                             <div class="d-flex align-items-center">
                                 <span class="badge bg-warning bg-opacity-10 text-warning me-2">
-                                    <i class="bi bi-percent me-1"></i>1.5% rate
+                                    <i class="bi bi-percent me-1"></i>% rate
                                 </span>
                                 <small class="text-muted">Bonus earned</small>
                             </div>
@@ -185,13 +185,13 @@
                                     @endif
                                 </td>
                                 <td class="text-end">
-                                    <span class="fw-bold">UGX {{ number_format($transaction->amount, 2) }}</span>
+                                    <span class="fw-bold">UGX {{ number_format($transaction->amount, 0) }}</span>
                                 </td>
                                 <td>
                                     @if($transaction->interest_rate > 0)
                                         <div class="d-flex flex-column">
                                             <span class="text-success fw-bold">+{{ $transaction->interest_rate }}%</span>
-                                            <small class="text-muted">UGX {{ number_format($transaction->final_amount - $transaction->amount, 2) }}</small>
+                                            <small class="text-muted">UGX {{ number_format($transaction->final_amount - $transaction->amount, 0) }}</small>
                                         </div>
                                     @else
                                         <span class="text-muted">-</span>
@@ -199,7 +199,7 @@
                                 </td>
                                 <td class="text-end">
                                     <span class="fw-bold {{ $transaction->type == 'deposit' ? 'text-success' : 'text-secondary' }}">
-                                        UGX {{ number_format($transaction->final_amount, 2) }}
+                                        UGX {{ number_format($transaction->final_amount, 0) }}
                                     </span>
                                 </td>
                                 <td>
@@ -265,7 +265,7 @@
                 <div class="card-body">
                     @php
                         $completedDeposits = $user->deposits()->where('status', 'completed')->get();
-                        $totalDeposits = $completedDeposits->sum('final_amount');
+                        $totalDeposits = $completedDeposits->sum('amount');
                         $totalPrincipal = $completedDeposits->sum('amount');
                         $totalInterest = $totalDeposits - $totalPrincipal;
                         $averageDeposit = $completedDeposits->count() > 0 ? $totalPrincipal / $completedDeposits->count() : 0;
@@ -324,14 +324,14 @@
                         <button class="btn btn-outline-dark-green btn-lg" onclick="window.print()">
                             <i class="bi bi-printer me-2"></i>Print Statement
                         </button>
-                        <button class="btn btn-outline-primary btn-lg" onclick="exportTransactions()">
+                        <a href="{{ route('transactions.export-pdf') }}" class="btn btn-outline-primary btn-lg">
                             <i class="bi bi-download me-2"></i>Export as PDF
-                        </button>
+                        </a>
                     </div>
                     <div class="mt-3 text-center">
                         <small class="text-muted">
                             <i class="bi bi-info-circle me-1"></i>
-                            Your savings are growing with 5% interest on every deposit
+                            Your savings are growing with 2% interest on every deposit
                         </small>
                     </div>
                 </div>
@@ -397,21 +397,6 @@ function refreshTransactions() {
     }, 1000);
 }
 
-function exportTransactions() {
-    // Show loading state
-    const exportBtn = document.querySelector('[onclick="exportTransactions()"]');
-    const originalHtml = exportBtn.innerHTML;
-    
-    exportBtn.innerHTML = '<i class="bi bi-download me-2"></i>Exporting...';
-    exportBtn.disabled = true;
-    
-    // Simulate export - in real app, this would generate a PDF
-    setTimeout(() => {
-        alert('Transaction history exported successfully!');
-        exportBtn.innerHTML = originalHtml;
-        exportBtn.disabled = false;
-    }, 2000);
-}
 
 // Print functionality
 function setupPrintStyles() {

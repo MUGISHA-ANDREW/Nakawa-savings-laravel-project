@@ -20,9 +20,6 @@
                     <form method="POST" action="{{ route('admin.members.store') }}">
                         @csrf
 
-                        <!-- Hidden role field set to member -->
-                        <input type="hidden" name="role" value="member">
-
                         <!-- Personal Information -->
                         <div class="row mb-4">
                             <div class="col-12">
@@ -122,11 +119,20 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="member_id" class="form-label">Member ID *</label>
-                                <input type="text" class="form-control @error('member_id') is-invalid @enderror" 
-                                       id="member_id" name="member_id" value="{{ old('member_id') }}" required>
-                                <small class="form-text text-muted">Unique identifier for the member</small>
-                                @error('member_id')
+                                <label for="member_id" class="form-label">Member ID</label>
+                                <input type="text" class="form-control bg-light" 
+                                       id="member_id" name="member_id" value="" readonly>
+                                <small class="form-text text-muted">Auto-generated unique identifier</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="role" class="form-label">Role *</label>
+                                <select class="form-control @error('role') is-invalid @enderror" 
+                                        id="role" name="role" required>
+                                    <option value="member" {{ old('role', 'member') == 'member' ? 'selected' : '' }}>Member</option>
+                                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                                </select>
+                                @error('role')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

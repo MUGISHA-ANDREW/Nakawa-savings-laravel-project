@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 /** @var \App\Models\User $user */
 class AdminController extends Controller
@@ -239,14 +241,146 @@ public function showRegistrationForm()
 
 public function storeMember(Request $request)
 {
-    // Add validation and member creation logic here
+    /** @var \App\Models\User $authUser */
+    $authUser = Auth::user();
+    if (!$authUser || !$authUser->isAdmin()) {
+        return redirect('/dashboard')->with('error', 'Access denied.');
+    }
+
     $validated = $request->validate([
         'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users',
-        'phone' => 'required|string|max:20',
-       
+        'email' => 'required|email|unique:users,email',
+        'phone' => 'required|string|max:20|unique:users,phone',
+        'username' => 'required|string|max:255|unique:users,username',
+        'password' => 'required|string|min:8|confirmed',
+        'role' => 'required|in:member,admin',
+        'next_of_kin_name' => 'required|string|max:255',
+        'next_of_kin_phone' => 'required|string|max:20',
+        'next_of_kin_relationship' => 'required|string|max:255',
+    ]);
+
+    User::create([
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'phone' => $validated['phone'],
+        'username' => $validated['username'],
+        'password' => Hash::make($validated['password']),
+        'next_of_kin_name' => $validated['next_of_kin_name'],
+        'next_of_kin_phone' => $validated['next_of_kin_phone'],
+        'next_of_kin_relationship' => $validated['next_of_kin_relationship'],
+        'role' => $validated['role'],
+        'account_balance' => 0,
     ]);
 
     return redirect()->route('admin.members')->with('success', 'Member registered successfully!');
+}
+
+public function exportMembers(Request $request)
+{
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
+    if (!$user || !$user->isAdmin()) {
+        return redirect('/dashboard')->with('error', 'Access denied.');
+    }
+
+    $format = $request->input('format', 'csv');
+    $includeBalances = $request->has('include_balances');
+    $includeTransactions = $request->has('include_transactions');
+
+    $members = User::where('role', 'member')->get();
+
+    if ($format === 'pdf') {
+        return $this->exportMembersPdf($members, $includeBalances, $includeTransactions);
+    }
+
+    $filename = 'nmsg_members_' . date('Y-m-d_His') . '.csv';
+
+    $headers = [
+        'Content-Type' => 'text/csv',
+        'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+    ];
+
+    $callback = function () use ($members, $includeBalances, $includeTransactions) {
+        $file = fopen('php://output', 'w');
+
+        // Header row
+        $headerRow = ['#', 'Name', 'Email', 'Phone', 'Username', 'Next of Kin', 'Kin Relationship', 'Kin Phone', 'Joined Date'];
+        if ($includeBalances) {
+            $headerRow[] = 'Account Balance (UGX)';
+        }
+        if ($includeTransactions) {
+            $headerRow[] = 'Total Deposits (UGX)';
+            $headerRow[] = 'Total Withdrawals (UGX)';
+        }
+        fputcsv($file, $headerRow);
+
+        // Data rows
+        foreach ($members as $index => $member) {
+            $row = [
+                $index + 1,
+                $member->name,
+                $member->email,
+                $member->phone,
+                $member->username,
+                $member->next_of_kin_name ?? 'N/A',
+                $member->next_of_kin_relationship ?? 'N/A',
+                $member->next_of_kin_phone ?? 'N/A',
+                $member->created_at->format('M d, Y'),
+            ];
+            if ($includeBalances) {
+                $row[] = number_format($member->account_balance, 2);
+            }
+            if ($includeTransactions) {
+                $totalDeposits = $member->transactions()->where('type', 'deposit')->where('status', 'completed')->sum('final_amount');
+                $totalWithdrawals = $member->transactions()->where('type', 'withdrawal')->where('status', 'completed')->sum('final_amount');
+                $row[] = number_format($totalDeposits, 2);
+                $row[] = number_format($totalWithdrawals, 2);
+            }
+            fputcsv($file, $row);
+        }
+
+        fclose($file);
+    };
+
+    return response()->stream($callback, 200, $headers);
+}
+
+private function exportMembersPdf($members, $includeBalances, $includeTransactions)
+{
+    $data = [];
+    foreach ($members as $index => $member) {
+        $row = [
+            'num' => $index + 1,
+            'name' => $member->name,
+            'email' => $member->email,
+            'phone' => $member->phone,
+            'username' => $member->username,
+            'next_of_kin_name' => $member->next_of_kin_name ?? 'N/A',
+            'next_of_kin_relationship' => $member->next_of_kin_relationship ?? 'N/A',
+            'next_of_kin_phone' => $member->next_of_kin_phone ?? 'N/A',
+            'joined' => $member->created_at->format('M d, Y'),
+        ];
+        if ($includeBalances) {
+            $row['balance'] = number_format($member->account_balance, 2);
+        }
+        if ($includeTransactions) {
+            $row['deposits'] = number_format(
+                $member->transactions()->where('type', 'deposit')->where('status', 'completed')->sum('final_amount'), 2
+            );
+            $row['withdrawals'] = number_format(
+                $member->transactions()->where('type', 'withdrawal')->where('status', 'completed')->sum('final_amount'), 2
+            );
+        }
+        $data[] = $row;
+    }
+
+    $pdf = Pdf::loadView('admin.exports.members-pdf', [
+        'members' => $data,
+        'includeBalances' => $includeBalances,
+        'includeTransactions' => $includeTransactions,
+        'generatedAt' => now()->format('F d, Y \a\t h:i A'),
+    ])->setPaper('a4', 'landscape');
+
+    return $pdf->download('nmsg_members_' . date('Y-m-d_His') . '.pdf');
 }
 }

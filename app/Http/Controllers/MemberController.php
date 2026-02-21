@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,8 +21,8 @@ class MemberController extends Controller
             'amount' => 'required|numeric|min:1000', // Minimum deposit 1000 UGX
         ]);
 
-        $interestRate = 0.02; // 2% interest per deposit
-        $interestAmount = $request->amount * $interestRate;
+        $interestRate = 2; // 2% interest per deposit
+        $interestAmount = $request->amount * ($interestRate / 100);
         $finalAmount = $request->amount + $interestAmount;
 
         // Create deposit transaction
@@ -32,7 +33,7 @@ class MemberController extends Controller
             'interest_rate' => $interestRate,
             'final_amount' => $finalAmount,
             'status' => 'completed', // Deposits are auto-approved
-            'notes' => 'Deposit with ' . ($interestRate * 100) . '% interest',
+            'notes' => 'Deposit with ' . $interestRate . '% interest',
         ]);
 
         // Update user balance WITH interest
@@ -85,5 +86,29 @@ class MemberController extends Controller
         $transactions = $user->transactions()->latest()->paginate(10);
         
         return view('member.transactions', compact('user', 'transactions'));
+    }
+
+    public function exportPdf()
+    {
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        if (!$user || !$user->isMember()) {
+            return redirect('/login');
+        }
+
+        $transactions = $user->transactions()->latest()->get();
+        $totalDeposits = $user->deposits()->where('status', 'completed')->sum('amount');
+        $totalWithInterest = $user->deposits()->where('status', 'completed')->sum('final_amount');
+        $totalInterest = $totalWithInterest - $totalDeposits;
+
+        $pdf = Pdf::loadView('member.transactions-pdf', [
+            'user' => $user,
+            'transactions' => $transactions,
+            'totalDeposits' => $totalDeposits,
+            'totalInterest' => $totalInterest,
+            'totalWithInterest' => $totalWithInterest,
+        ]);
+
+        return $pdf->download('NMSG_Transaction_Report_' . now()->format('Y-m-d') . '.pdf');
     }
 }

@@ -35,6 +35,7 @@ Route::get('/dashboard', [DashboardController::class, 'dashboard'])
 Route::middleware(['auth'])->group(function () {
     Route::post('/deposit', [MemberController::class, 'deposit'])->name('deposit');
     Route::get('/transactions', [MemberController::class, 'transactions'])->name('transactions');
+    Route::get('/transactions/export-pdf', [MemberController::class, 'exportPdf'])->name('transactions.export-pdf');
 });
 
 // Admin routes
@@ -42,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
     // Member Management Routes
     Route::get('/admin/members', [AdminController::class, 'members'])->name('admin.members');
     Route::get('/admin/members/register', [AdminController::class, 'showRegistrationForm'])->name('admin.members.register');
+    Route::get('/admin/members/export', [AdminController::class, 'exportMembers'])->name('admin.members.export');
     Route::post('/admin/members/store', [AdminController::class, 'storeMember'])->name('admin.members.store');
     Route::get('/admin/members/{id}/edit', [AdminController::class, 'editMember'])->name('admin.members.edit');
     Route::put('/admin/members/{id}', [AdminController::class, 'updateMember'])->name('admin.members.update');

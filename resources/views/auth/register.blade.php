@@ -72,8 +72,8 @@
                                         name="role" required>
                                     <option value="">Select Account Type</option>
                                     <option value="member" {{ old('role') == 'member' ? 'selected' : '' }}>Member (Regular Savings Account)</option>
-                                    {{-- <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrator (Group Management)</option>
-                                    <option value="treasurer" {{ old('role') == 'treasurer' ? 'selected' : '' }}>Treasurer (Financial Management)</option> --}}
+                                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrator (Group Management)</option>
+                                    <option value="treasurer" {{ old('role') == 'treasurer' ? 'selected' : '' }}>Treasurer (Financial Management)</option>
                                 </select>
                                 @error('role')
                                     <span class="invalid-feedback" role="alert">

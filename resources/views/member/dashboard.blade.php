@@ -29,7 +29,7 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div class="flex-grow-1">
                             <h6 class="card-title text-uppercase text-muted fw-bold mb-2">Account Balance</h6>
-                            <h2 class="fw-bold text-success mb-1">UGX {{ number_format(auth()->user()->account_balance, 2) }}</h2>
+                            <h2 class="fw-bold text-success mb-1">UGX {{ number_format(auth()->user()->account_balance, 0) }}</h2>
                             <div class="d-flex align-items-center">
                                 <span class="badge bg-success bg-opacity-10 text-success me-2">
                                     <i class="bi bi-wallet2 me-1"></i>Available
@@ -44,7 +44,7 @@
                 </div>
                 <div class="card-footer bg-transparent border-0 pt-0">
                     <small class="text-muted">
-                        <i class="bi bi-info-circle me-1"></i>Your total savings balance with 1.5% interest
+                        <i class="bi bi-info-circle me-1"></i>Your total savings balance with 2% interest
                     </small>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div class="flex-grow-1">
                             <h6 class="card-title text-uppercase text-muted fw-bold mb-2">Total Deposits</h6>
-                            <h2 class="fw-bold text-primary mb-1">UGX {{ number_format($stats['total_deposits'] ?? 0, 2) }}</h2>
+                            <h2 class="fw-bold text-primary mb-1">UGX {{ number_format($stats['total_deposits'] ?? 0, 0) }}</h2>
                             <div class="d-flex align-items-center">
                                 <span class="badge bg-primary bg-opacity-10 text-primary me-2">
                                     <i class="bi bi-arrow-up me-1"></i>{{ $stats['total_deposits_count'] ?? 0 }} deposits
@@ -88,7 +88,7 @@
                         <h5 class="mb-0 fw-bold">
                             <i class="bi bi-plus-circle me-2"></i>Make a Deposit
                         </h5>
-                        <span class="badge bg-beige text-dark-green">+1.5% Interest</span>
+                        <span class="badge bg-beige text-dark-green">+2% Interest</span>
                     </div>
                 </div>
                 <div class="card-body p-4">
@@ -120,7 +120,7 @@
                                             <span class="fw-bold text-primary" id="previewPrincipal">UGX 0</span>
                                         </div>
                                         <div class="col-6">
-                                            <small class="text-muted d-block">+1.5% Interest</small>
+                                            <small class="text-muted d-block">+2% Interest</small>
                                             <span class="fw-bold text-success" id="previewInterest">UGX 0</span>
                                         </div>
                                     </div>
@@ -152,7 +152,7 @@
                                         <i class="bi bi-percent"></i>
                                     </div>
                                     <div>
-                                        <span class="fw-semibold">1.5% Interest</span>
+                                        <span class="fw-semibold">2% Interest</span>
                                         <small class="text-muted d-block">Bonus on every deposit</small>
                                     </div>
                                 </div>
@@ -296,7 +296,7 @@
                                     <div class="fw-semibold">
                                         {{ ucfirst($transaction->type) }}
                                         @if($transaction->type == 'deposit')
-                                            <small class="text-success">(+1.5%)</small>
+                                            <small class="text-success">(+2%)</small>
                                         @endif
                                     </div>
                                     <small class="text-muted">{{ $transaction->created_at->diffForHumans() }}</small>
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (depositAmountInput) {
         depositAmountInput.addEventListener('input', function() {
             const amount = parseFloat(this.value) || 0;
-            const interestRate = 1.5; // 1.5% interest
+            const interestRate = 2; // 2% interest
             const interestAmount = (amount * interestRate) / 100;
             const totalAmount = amount + interestAmount;
 

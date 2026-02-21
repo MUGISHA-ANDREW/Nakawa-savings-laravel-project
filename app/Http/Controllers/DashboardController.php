@@ -11,6 +11,7 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         if ($user->isAdmin()) {
@@ -43,10 +44,11 @@ class DashboardController extends Controller
     
     private function memberDashboard()
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         $stats = [
-            'total_deposits' => $user->deposits()->where('status', 'completed')->sum('final_amount') ?? 0,
+            'total_deposits' => $user->deposits()->where('status', 'completed')->sum('amount') ?? 0,
             'total_withdrawals' => $user->withdrawals()->where('status', 'completed')->sum('final_amount') ?? 0,
             'pending_requests' => $user->transactions()->where('status', 'pending')->count(),
         ];

@@ -370,39 +370,42 @@
 <div class="modal fade" id="exportModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Export Members Data</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label">Export Format</label>
-                    <select class="form-select">
-                        <option>Excel (.xlsx)</option>
-                        <option>CSV (.csv)</option>
-                        <option>PDF (.pdf)</option>
-                    </select>
+            <form action="{{ route('admin.members.export') }}" method="GET">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export Members Data</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Data to Include</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" checked>
-                        <label class="form-check-label">Basic Member Information</label>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Export Format</label>
+                        <select class="form-select" name="format">
+                            <option value="csv">CSV (.csv)</option>
+                            <option value="pdf">PDF (.pdf)</option>
+                        </select>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" checked>
-                        <label class="form-check-label">Account Balances</label>
+                    <div class="mb-3">
+                        <label class="form-label">Data to Include</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="include_basic" checked disabled>
+                            <label class="form-check-label">Basic Member Information</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="include_balances" value="1" checked>
+                            <label class="form-check-label">Account Balances</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="include_transactions" value="1">
+                            <label class="form-check-label">Transaction History</label>
+                        </div>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox">
-                        <label class="form-check-label">Transaction History</label>
-                    </div>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-success">Export Data</button>
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-download me-1"></i>Export Data
+                </button>
             </div>
+            </form>
         </div>
     </div>
 </div>
@@ -494,7 +497,33 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function printMemberList() {
-    const printContent = document.getElementById('membersTable').outerHTML;
+    const table = document.getElementById('membersTable');
+    if (!table) {
+        alert('No members to print.');
+        return;
+    }
+    
+    // Clone the table to remove action buttons
+    const clonedTable = table.cloneNode(true);
+    
+    // Remove the actions column (last column) from header and each row
+    const headerRow = clonedTable.querySelector('thead tr');
+    if (headerRow && headerRow.lastElementChild) {
+        headerRow.lastElementChild.remove();
+    }
+    const bodyRows = clonedTable.querySelectorAll('tbody tr');
+    bodyRows.forEach(row => {
+        if (row.lastElementChild) {
+            row.lastElementChild.remove();
+        }
+    });
+    
+    // Show all hidden columns for print
+    clonedTable.querySelectorAll('.d-none').forEach(el => {
+        el.classList.remove('d-none', 'd-md-table-cell', 'd-lg-table-cell', 'd-sm-table-cell');
+    });
+    
+    const printContent = clonedTable.outerHTML;
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
         <html>
@@ -505,7 +534,7 @@ function printMemberList() {
                     table { width: 100%; border-collapse: collapse; font-size: 12px; }
                     th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
                     th { background-color: #f8f9fa; font-weight: bold; }
-                    .badge, .btn-group { display: none; }
+                    .member-avatar { display: none; }
                     @media print {
                         body { margin: 0; }
                         table { font-size: 10px; }
