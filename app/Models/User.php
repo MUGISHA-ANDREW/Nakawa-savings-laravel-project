@@ -44,6 +44,11 @@ class User extends Authenticatable
         return $this->role === 'member';
     }
 
+    public function isTreasurer(): bool
+    {
+        return $this->role === 'treasurer';
+    }
+
     public function transactions()
     {
         return $this->hasMany(Transaction::class);

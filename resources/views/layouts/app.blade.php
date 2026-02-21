@@ -44,7 +44,48 @@
             }
             .sidebar {
                 min-height: calc(100vh - 56px);
-                background-color: #f8f9fa;
+                background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%);
+                padding-top: 1.5rem;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            }
+            .sidebar .nav-link {
+                color: rgba(245, 245, 220, 0.75);
+                padding: 0.75rem 1.25rem;
+                margin: 0.15rem 0.75rem;
+                border-radius: 10px;
+                font-weight: 500;
+                font-size: 0.925rem;
+                transition: all 0.2s ease;
+            }
+            .sidebar .nav-link:hover {
+                color: #fff;
+                background: rgba(245, 245, 220, 0.12);
+                transform: translateX(4px);
+            }
+            .sidebar .nav-link.active {
+                color: #1a472a;
+                background: rgba(245, 245, 220, 0.9);
+                font-weight: 600;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            }
+            .sidebar .nav-link i {
+                font-size: 1.1rem;
+                width: 24px;
+                text-align: center;
+            }
+            .sidebar-brand {
+                color: #f5f5dc;
+                font-size: 0.7rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                padding: 0 1.25rem;
+                margin-bottom: 0.5rem;
+                opacity: 0.5;
+            }
+            .sidebar-divider {
+                border-top: 1px solid rgba(245, 245, 220, 0.15);
+                margin: 1rem 1.25rem;
             }
         </style>
     </head>
@@ -58,29 +99,30 @@
                 <!-- Sidebar (for admin) -->
                 @auth
                     @if(auth()->user()->isAdmin())
-                    <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse bg-light">
+                    <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
                         <div class="position-sticky pt-3">
+                            <div class="sidebar-brand">Navigation</div>
                             <ul class="nav flex-column">
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{{ route('dashboard') }}">
+                                    <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
                                         <i class="bi bi-speedometer2 me-2"></i>
                                         Dashboard
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.members') }}">
+                                    <a class="nav-link {{ request()->routeIs('admin.members*') ? 'active' : '' }}" href="{{ route('admin.members') }}">
                                         <i class="bi bi-people me-2"></i>
                                         Manage Members
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.transactions') }}">
+                                    <a class="nav-link {{ request()->routeIs('admin.transactions') ? 'active' : '' }}" href="{{ route('admin.transactions') }}">
                                         <i class="bi bi-list-check me-2"></i>
                                         All Transactions
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.reports') }}">
+                                    <a class="nav-link {{ request()->routeIs('admin.reports') ? 'active' : '' }}" href="{{ route('admin.reports') }}">
                                         <i class="bi bi-graph-up me-2"></i>
                                         Reports
                                     </a>

@@ -253,7 +253,7 @@ public function storeMember(Request $request)
         'phone' => 'required|string|max:20|unique:users,phone',
         'username' => 'required|string|max:255|unique:users,username',
         'password' => 'required|string|min:8|confirmed',
-        'role' => 'required|in:member,admin',
+        'role' => 'required|in:member,admin,treasurer',
         'next_of_kin_name' => 'required|string|max:255',
         'next_of_kin_phone' => 'required|string|max:20',
         'next_of_kin_relationship' => 'required|string|max:255',

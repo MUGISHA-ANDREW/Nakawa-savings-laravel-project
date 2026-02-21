@@ -135,7 +135,7 @@
     }
 </style>
 
-<div class="container-fluid px-4">
+<div class="container-fluid px-4 pt-4">
     <!-- Welcome Banner -->
     <div class="welcome-banner shadow-sm p-4 mb-4">
         <div class="row align-items-center position-relative" style="z-index: 1;">
