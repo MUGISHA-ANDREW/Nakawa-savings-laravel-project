@@ -296,7 +296,7 @@
                                     <div class="fw-semibold">
                                         {{ ucfirst($transaction->type) }}
                                         @if($transaction->type == 'deposit')
-                                            <small class="text-success">(+2%)</small>
+                                            <small class="text-success">(+8%)</small>
                                         @endif
                                     </div>
                                     <small class="text-muted">{{ $transaction->created_at->diffForHumans() }}</small>
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (depositAmountInput) {
         depositAmountInput.addEventListener('input', function() {
             const amount = parseFloat(this.value) || 0;
-            const interestRate = 2; // 2% interest
+            const interestRate = 8; // 8% interest
             const interestAmount = (amount * interestRate) / 100;
             const totalAmount = amount + interestAmount;
 
