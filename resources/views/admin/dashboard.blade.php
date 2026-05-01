@@ -7,7 +7,6 @@
 @endsection
 
 @section('content')
-
 <style>
     .stat-card {
         border: none;
