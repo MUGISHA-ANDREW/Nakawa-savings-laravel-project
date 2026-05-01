@@ -18,6 +18,7 @@
         transform: translateY(-4px);
         box-shadow: 0 8px 25px rgba(26, 71, 42, 0.15) !important;
     }
+    
     .stat-card .stat-icon {
         width: 56px;
         height: 56px;
