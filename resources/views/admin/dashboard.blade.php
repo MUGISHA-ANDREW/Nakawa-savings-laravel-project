@@ -14,7 +14,6 @@
         overflow: hidden;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    
     .stat-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 8px 25px rgba(26, 71, 42, 0.15) !important;
