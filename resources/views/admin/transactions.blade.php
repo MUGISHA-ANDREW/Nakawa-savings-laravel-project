@@ -37,7 +37,6 @@
                                 <th>Status</th>
                                 <th>Date</th>
                             </tr>
-                            
                         </thead>
                         <tbody>
                             @foreach($transactions as $transaction)
