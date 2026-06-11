@@ -35,8 +35,7 @@
                                 <th>Amount</th>
                                 <th>Interest Rate</th>
                                 <th>Status</th>
-                                <th>Date</th>
-                         
+                                <th>Date</th>                         
                             </tr>
                         </thead>
                         <tbody>
