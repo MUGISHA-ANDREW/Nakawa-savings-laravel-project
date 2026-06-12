@@ -24,7 +24,7 @@
             </h6>
 
         </div>
-        
+       
         <div class="card-body">
             @if($transactions->count() > 0)
                 <div class="table-responsive">
