@@ -26,7 +26,7 @@
         <div class="card-body">
             @if($transactions->count() > 0)
                 <div class="table-responsive">
-                    
+                  
                     <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                         <thead class="bg-light">
                             <tr>
