@@ -28,8 +28,7 @@
                 <div class="table-responsive">                  
                     <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                         <thead class="bg-light">
-                            <tr>
-                                                            
+                            <tr>                                                            
                                 <th>ID</th>                          
                                 <th>Member</th>
                                 <th>Type</th>                           
