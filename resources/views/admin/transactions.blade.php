@@ -30,7 +30,7 @@
                     <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                         <thead class="bg-light">
                             <tr>      
-                                                                                      
+                                                                                  
                                 <th>ID</th>                          
                                 <th>Member</th>
                                 <th>Type</th>                           
