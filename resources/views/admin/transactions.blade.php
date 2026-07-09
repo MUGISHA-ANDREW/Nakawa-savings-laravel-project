@@ -23,7 +23,6 @@
                 <i class="bi bi-list-check me-2"></i>Transaction History
             </h6>    
         </div>      
-
         <div class="card-body">
             @if($transactions->count() > 0)
                 <div class="table-responsive">                  
