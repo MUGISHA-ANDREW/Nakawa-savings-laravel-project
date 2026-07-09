@@ -23,13 +23,14 @@
                 <i class="bi bi-list-check me-2"></i>Transaction History
             </h6>    
         </div>      
-              
+
         <div class="card-body">
             @if($transactions->count() > 0)
                 <div class="table-responsive">                  
                     <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                         <thead class="bg-light">
-                            <tr>                                                            
+                            <tr>      
+                                                                                      
                                 <th>ID</th>                          
                                 <th>Member</th>
                                 <th>Type</th>                           
