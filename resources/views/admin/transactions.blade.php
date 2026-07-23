@@ -34,8 +34,7 @@
                                 <th>ID</th>                          
                                 <th>Member</th>
                                 <th>Type</th>                           
-                                <th>Amount</th>
-                           
+                                <th>Amount</th>                          
                                 <th>Interest Rate</th>
                                 <th>Status</th>
                                 <th>Date</th>                         
